@@ -13,7 +13,7 @@ namespace PR.CargoShipping
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new frmTrips());
+            Application.Run(new frmTrips(new Service.TripSegmentService(new Repository.TripSegmentRepository())));
         }
     }
 }
