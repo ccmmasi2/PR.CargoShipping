@@ -1,3 +1,8 @@
+using Microsoft.Extensions.DependencyInjection;
+using PR.CargoShipping.Repository;
+using PR.CargoShipping.Service;
+using System.ServiceProcess;
+
 namespace PR.CargoShipping
 {
     internal static class Program
@@ -13,7 +18,22 @@ namespace PR.CargoShipping
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new frmTrips(new Service.TripSegmentService(new Repository.TripSegmentRepository())));
+
+            var services = new ServiceCollection();
+            ConfigureServices(services);
+
+            using (ServiceProvider serviceProvider = services.BuildServiceProvider())
+            {
+                var frmTrips = serviceProvider.GetRequiredService<frmTrips>();
+                Application.Run(frmTrips);
+            }
+        }
+
+        static void ConfigureServices(ServiceCollection services)
+        {
+            services.AddTransient<frmTrips>();
+            services.AddTransient<ITripSegmentService, TripSegmentService>();
+            services.AddTransient<ITripSegmentRepository, TripSegmentRepository>();
         }
     }
 }
